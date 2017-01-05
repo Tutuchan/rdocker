@@ -1,0 +1,13 @@
+Package: rdocker
+Type: Package
+Title: An interface to the Docker REST API
+Version: 0.1.0
+Author: Pierre Formont <pierre.formont@gmail.com>
+Maintainer: Pierre Formont <pierre.formont@gmail.com>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: MIT
+Imports:
+    httr
+Encoding: UTF-8
+LazyData: true
