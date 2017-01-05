@@ -2,7 +2,7 @@
 % Please edit documentation in R/containers.R
 \name{docker_container}
 \alias{docker_container}
-\title{ctontainer}
+\title{containers}
 \usage{
 docker_container(server, id)
 }
@@ -15,6 +15,6 @@ docker_container(server, id)
 an object of class \code{docker_container}
 }
 \description{
-ctontainer
+containers
 }
 

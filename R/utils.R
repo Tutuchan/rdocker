@@ -6,7 +6,7 @@ make_uri <- function(server, endpoint, ...) {
 }
 
 post_uri <- function(server, uri, ... ) {
-  stopifnot(inherits(server), "docker_server")
+  stopifnot(inherits(server, "docker_server"))
 
   uri <- make_uri(server, uri)
   parameters <- list(...)

@@ -1,4 +1,4 @@
-#' ctontainer
+#' containers
 #'
 #' @param server a \code{\link{docker_server}} object
 #' @param id the container id
@@ -25,6 +25,11 @@ docker_container <- function(server, id) {
 #' @return a \code{\link{docker_container}} object
 #'
 #' @source https://docs.docker.com/engine/reference/api/docker_remote_api_v1.24/#/create-a-container
+#'
+#' @examples
+#' \dontrun{
+#'   create(server, Image = "hello-world")
+#' }
 #'
 #' @export
 create <- function(server, ...) {
@@ -81,8 +86,6 @@ inspect <- function(server, id, ...) {
 
   l <- lapply(body, length) %>% unlist()
   if (any(l != 1)) body[l != 1] <- lapply(body[l != 1], function(x) list(x))
-
-
 
   as_tibble(body)
 }

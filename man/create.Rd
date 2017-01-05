@@ -20,4 +20,10 @@ a \code{\link{docker_container}} object
 \description{
 create a container
 }
+\examples{
+\dontrun{
+  create(server, Image = "hello-world")
+}
+
+}
 
