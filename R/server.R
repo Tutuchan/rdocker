@@ -21,9 +21,10 @@ docker_server <- function(host, port) {
   )
 }
 
-#' list containers on a server
+#' list elements on a server
 #'
 #' @param server a \code{\link{docker_server}} object
+#' @param type a character
 #' @param ... a named list of parameters
 #'
 #' @return a tibble
@@ -31,15 +32,25 @@ docker_server <- function(host, port) {
 #' @source https://docs.docker.com/engine/reference/api/docker_remote_api_v1.24/#list-containers
 #'
 #' @export
-list_containers <- function(server, ...) {
-  uri <- make_uri(server, "containers/json", ...)
+docker_list <- function(server, type = c("containers", "images", "networks", "volumes"), ...) {
+
+  uri_tail <- if (type %in% c("containers", "images")) "%s/json" else "%s"
+
+  uri <- make_uri(
+    server,
+    sprintf(uri_tail, type),
+    ...
+  )
 
   r <- GET(uri)
-  body <- fromJSON(content(r, "text"))
+  body <- suppressMessages(fromJSON(content(r, "text")))
 
   # Transform data.frames into list for tibble transformation
+  # TODO : ok for containers, not for the others
   is_df <- lapply(body, is.data.frame) %>% unlist()
-  if (any(is_df)) body[is_df] <- lapply(body[is_df], as.list)
+  if (any(is_df)) {
+    if (sum(is_df) > 1) body[is_df] <- lapply(body[is_df], as.list) else body[, is_df] <- list(body[, is_df])
+  }
 
   is_null <- lapply(body, is.null) %>% unlist()
   if (any(is_null)) body[is_null] <- NULL

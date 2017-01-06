@@ -32,7 +32,7 @@ docker_container <- function(server, id) {
 #' }
 #'
 #' @export
-create <- function(server, ...) {
+docker_create <- function(server, ...) {
   r <- post_uri(server, "containers/create", ...)
 
   docker_container(
@@ -51,8 +51,101 @@ create <- function(server, ...) {
 #' @source https://docs.docker.com/engine/reference/api/docker_remote_api_v1.24/#start-a-container
 #'
 #' @export
-start <- function(container, ...) {
-  r <- post_uri(container$server, sprintf("containers/%s/start", container), ...)
+docker_start <- function(container, ...) {
+  r <- post_uri(container$server, sprintf("containers/%s/start", container$container$Id), ...)
+
+  status_code(r)
+
+}
+
+#' stop a container
+#'
+#' @param container a \code{\link{docker_container}} object
+#' @param ... a named list of parameters
+#'
+#' @return a numeric, the status code of the response
+#'
+#' @source https://docs.docker.com/engine/reference/api/docker_remote_api_v1.24/#stop-a-container
+#'
+#' @export
+docker_stop <- function(container, ...) {
+  r <- post_uri(container$server, sprintf("containers/%s/stop", container$container$Id), ...)
+
+  status_code(r)
+
+}
+
+#' restart a container
+#'
+#' @param container a \code{\link{docker_container}} object
+#' @param ... a named list of parameters
+#'
+#' @return a numeric, the status code of the response
+#'
+#' @source https://docs.docker.com/engine/reference/api/docker_remote_api_v1.24/#restart-a-container
+#'
+#' @export
+docker_restart <- function(container, ...) {
+  r <- post_uri(container$server, sprintf("containers/%s/restart", container$container$Id), ...)
+
+  status_code(r)
+
+}
+
+
+#' kill a container
+#'
+#' @param container a \code{\link{docker_container}} object
+#' @param ... a named list of parameters
+#'
+#' @return a numeric, the status code of the response
+#'
+#' @source https://docs.docker.com/engine/reference/api/docker_remote_api_v1.24/#kill-a-container
+#'
+#' @export
+docker_kill <- function(container, ...) {
+  r <- post_uri(container$server, sprintf("containers/%s/kill", container$container$Id), ...)
+
+  status_code(r)
+
+}
+
+
+#' rename a container
+#'
+#' @param container a \code{\link{docker_container}} object
+#' @param name a character the new container name
+#'
+#' @return a numeric, the status code of the response
+#'
+#' @source https://docs.docker.com/engine/reference/api/docker_remote_api_v1.24/#kill-a-container
+#'
+#' @export
+docker_rename <- function(container, name) {
+  r <- post_uri(
+    container$server,
+    sprintf(
+      "containers/%s/rename?name=%s",
+      container$container$Id,
+      name
+    )
+  )
+
+  status_code(r)
+}
+
+#' remove a container
+#'
+#' @param x a \code{\link{docker_container}} object
+#' @param ... a named list of parameters
+#'
+#' @return a numeric, the status code of the response
+#'
+#' @source https://docs.docker.com/engine/reference/api/docker_remote_api_v1.24/#remove-a-container
+#'
+#' @export
+docker_remove.docker_container <- function(x, ...) {
+  r <- delete_uri(x$server, sprintf("containers/%s", x$container$Id), ...)
 
   status_code(r)
 
@@ -99,7 +192,7 @@ print.docker_container <- function(x, ...) {
       substr(x$container$Id, 1, 8),
       x$container$Created,
       x$container$Image,
-      toString(x$container$args[[1]]),
+      toString(x$container$Args[[1]]),
       x$container$Path
     )
   )
